@@ -1,0 +1,45 @@
+/* Контейнер для всієї статистики */
+.stats-header {
+  display: flex;
+  justify-content: space-around; /* Рівномірна відстань між картками */
+  gap: 20px;
+  margin: 20px 0;
+  padding: 20px;
+  background: #f8fafc; /* Легкий фон, щоб виділити блок */
+  border-radius: 12px;
+}
+
+/* Окрема картка статистики */
+.stat-item {
+  display: flex;
+  align-items: center; /* Центрування іконки та тексту по вертикалі */
+  gap: 15px;
+  background: white;
+  padding: 15px 25px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Легка тінь */
+  flex: 1; /* Картки будуть однакової ширини */
+}
+
+.stat-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background: #eff6ff;
+  border-radius: 50%;
+}
+
+.stat-info h4 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: bold;
+  color: #1e293b;
+}
+
+.stat-info p {
+  margin: 0;
+  font-size: 14px;
+  color: #64748b;
+}
