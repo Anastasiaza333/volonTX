@@ -800,7 +800,7 @@ body {
 }
 /* Це змусить блок статистики стати в один рядок */
 .stats-header {
-  display: flex;            /* МАГІЯ ТУТ: вмикає гнучкий рядок */
+  display: flex;            /*  вмикає гнучкий рядок */
   justify-content: center;  /* Центрує картки */
   gap: 20px;                /* Відстань між картками */
   margin: 20px 0;           /* Відступ зверху і знизу від усього блоку */
@@ -831,4 +831,106 @@ body {
   margin: 0;                /* Прибираємо зайві відступи у підписів */
   color: #666;
   font-size: 14px;
+}.card-image {
+  width: 100%;
+  height: 200px; /* Обов'язково задай висоту */
+  overflow: hidden;
+  background-color: #f0f0f0; /* Сірий фон, поки вантажиться */
+}
+
+.card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Це щоб фото не розтягувалось, а красиво заповнювало блок */
+  display: block;
+}
+/* 1. Головна сітка для карток (grid) */
+.initiatives-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+  padding: 20px 0;
+}
+
+/* 2. Сама картка — тепер вона вертикальна і контролює свій вміст */
+.modern-card {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column; /* Елементи йдуть один під одним: картинка -> тіло -> кнопка */
+  overflow: hidden; /* Жоден елемент всередині не зможе вилізти за межі заокруглених кутів! */
+  height: 100%; /* Щоб усі картки в одному рядку були однакової висоти */
+  position: relative;
+  border: 1px solid #e5e7eb;
+}
+
+/* 3. Контейнер для картинки (задає фіксовану рамку) */
+.card-image-wrapper {
+  width: 100%;
+  height: 200px; /* Усі картинки на сайті будуть строго 200px заввишки */
+  overflow: hidden; /* Ховає все, що не влазить у 200px */
+  position: relative;
+  background-color: #f3f4f6; /* Сірий фон, поки картинка вантажиться */
+}
+
+/* 4. Магічні стилі для самої картинки */
+.card-img {
+  width: 100%;
+  height: 100%;
+  /* Object-fit: cover обрізає краї зображення, зберігаючи його пропорції (як у Instagram). 
+     Цуценята чи машини більше не будуть сплющеними або гігантськими! */
+  object-fit: cover; 
+  object-position: center; /* Центрує фокус фотографії */
+  display: block;
+}
+
+/* 5. Тіло картки (текст, назва, опис) */
+.card-body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex-grow: 1; /* Змушує текстову частину займати весь вільний простір, вирівнюючи кнопки */
+}
+
+/* 6. Опис проєкту (обмежуємо текст, якщо він занадто довгий) */
+.card-desc {
+  font-size: 14px;
+  color: #4b5563;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* Показувати максимум 3 рядки опису, далі — трикрапка (...) */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* 7. Кнопка в самому низу картки */
+.btn-modern-help, .btn-modern-applied {
+  margin: 0 16px 16px 16px; /* Відступи від країв картки */
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  border: none;
+  transition: background 0.2s;
+}
+
+.btn-modern-help {
+  background: #4f46e5;
+  color: white;
+}
+
+.btn-modern-help:hover {
+  background: #4338ca;
+}
+
+.btn-modern-applied {
+  background: #e0e7ff;
+  color: #4338ca;
+  cursor: not-allowed;
 }

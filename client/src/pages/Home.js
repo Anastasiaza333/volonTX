@@ -17,7 +17,7 @@ const Home = ({ user }) => {
 
   const fetchInitiatives = async () => {
     try {
-      const res = await axios.get('http://localhost:5001/projects'); 
+      const res = await axios.get('http://localhost:5001/initiatives'); // Переконайся, що тут правильний роут
       setInitiatives(res.data);
     } catch (err) { console.error(err); }
   };
@@ -37,26 +37,39 @@ const Home = ({ user }) => {
     } catch (err) { console.error(err); }
   };
 
+  const getPlaceholderImage = (category, id) => {
+    const cat = category ? category.toLowerCase().trim() : 'community';
+    
+    const images = {
+      'військова допомога': 'https://cdn.pixabay.com/photo/2016/02/05/15/34/soldier-1181064_600.jpg',
+      'гуманітарна допомога': 'https://cdn.pixabay.com/photo/2017/08/07/19/43/charity-2607141_600.jpg',
+      'тварини': 'https://cdn.pixabay.com/photo/2016/12/13/05/15/puppy-1903313_600.jpg',
+      'медицина': 'https://cdn.pixabay.com/photo/2017/10/04/18/27/doctor-2817035_600.jpg',
+      'екологія': 'https://cdn.pixabay.com/photo/2015/12/04/14/05/tree-1076532_600.jpg',
+      'освіта': 'https://cdn.pixabay.com/photo/2016/09/10/17/18/book-1659717_600.jpg',
+      'допомога старшим': 'https://cdn.pixabay.com/photo/2017/08/07/22/57/people-2608823_600.jpg',
+      'default': 'https://cdn.pixabay.com/photo/2016/11/08/05/11/hands-1807503_600.jpg'
+    };
+
+    return images[cat] || images['default'];
+  };
+
   const filteredInitiatives = initiatives.filter(item => {
     const matchesSearch = item.title?.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                         item.location?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === 'Всі' || item.category === selectedCategory;
+                          item.location?.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const itemCat = item.category ? item.category.toLowerCase().trim() : '';
+    const selectedCat = selectedCategory.toLowerCase().trim();
+
+    const matchesCategory = selectedCategory === 'Всі' || 
+                            itemCat === selectedCat || 
+                            (selectedCat.includes('гуманітарна') && itemCat === 'допомога');
+
     return matchesSearch && matchesCategory;
   });
 
-  const getPlaceholderImage = (category) => {
-    const images = {
-      'Військова допомога': 'https://images.unsplash.com/photo-1590231338245-08282f2dbb3d?q=80&w=500',
-      'Тварини': 'https://images.unsplash.com/photo-1532629345422-7515f3d16bb8?q=80&w=500',
-      'Медицина': 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?q=80&w=500',
-      'DEFAULT': 'https://images.unsplash.com/photo-1559027615-cd26735550b0?q=80&w=500'
-    };
-    return images[category] || images['DEFAULT'];
-  };
-
   return (
     <div className="home-view">
-      {/* --- ОСЬ ВІН, БЛОК СТАТИСТИКИ --- */}
       <section className="stats-header">
         <div className="stat-item">
           <div className="stat-icon"><TrendingUp size={24} color="#4f46e5" /></div>
@@ -65,7 +78,6 @@ const Home = ({ user }) => {
             <p>Активних зборів</p>
           </div>
         </div>
-
         <div className="stat-item">
           <div className="stat-icon"><Heart size={24} color="#ef4444" /></div>
           <div className="stat-info">
@@ -73,7 +85,6 @@ const Home = ({ user }) => {
             <p>Відгуків волонтерів</p>
           </div>
         </div>
-
         <div className="stat-item">
           <div className="stat-icon"><ShieldCheck size={24} color="#10b981" /></div>
           <div className="stat-info">
@@ -111,8 +122,14 @@ const Home = ({ user }) => {
             const hasApplied = applications.some(app => app.initiative_id === item.id && app.user_id === user?.id);
             return (
               <div key={item.id} className="modern-card">
-                <div className="card-image">
-                  <img src={getPlaceholderImage(item.category)} alt={item.title} />
+                <div className="card-image-wrapper">
+                  {}
+                  <img 
+                    src={item.image_url || getPlaceholderImage(item.category, item.id)} 
+                    alt={item.title}
+                    className="card-img"
+                    referrerPolicy="no-referrer" 
+                  />
                 </div>
                 
                 <div className="card-body">
@@ -122,12 +139,13 @@ const Home = ({ user }) => {
                       {item.category}
                     </span>
                   </div>
-                  <p>{item.description}</p>
+                  <p className="card-desc">{item.description}</p>
                   <div className="card-meta">
-                    <MapPin size={14} /> <span>{item.location}</span>
-                    <div className="v-count"><Users size={14}/> {item.volunteer_count || 0} волонтерів</div>
+                    <div className="meta-item"><MapPin size={14} /> <span>{item.location}</span></div>
+                    <div className="meta-item"><Users size={14}/> {item.volunteer_count || 0} волонтерів</div>
                   </div>
                 </div>
+
                 <button 
                   className={hasApplied ? "btn-modern-applied" : "btn-modern-help"} 
                   onClick={() => !hasApplied && handleApply(item.id)}

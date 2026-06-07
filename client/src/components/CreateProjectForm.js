@@ -3,7 +3,7 @@ import axios from 'axios';
 import { PlusCircle, MapPin, Tag, AlignLeft } from 'lucide-react';
 
 const CreateProjectForm = ({ user_id, onProjectCreated }) => {
-  // Стан називаємо project, як у твоїх інпутах
+
   const [project, setProject] = useState({ 
     title: '', 
     description: '', 
@@ -18,20 +18,20 @@ const CreateProjectForm = ({ user_id, onProjectCreated }) => {
     setLoading(true);
 
     try {
-      // Використовуємо порт 5001 та шлях /initiatives
-      // Передаємо дані саме зі стану 'project'
+  
       const res = await axios.post('http://localhost:5001/initiatives', { 
         title: project.title,
         description: project.description,
         location: project.location,
         category: project.category,
-        organizer_id: user_id 
+        organizer_id: user_id ,
+        image_url: project.image_url
       });
 
       if (res.status === 201 || res.status === 200) {
         alert("Проєкт успішно опубліковано!");
         
-        // Очищуємо форму
+     
         setProject({ 
           title: '', 
           description: '', 
@@ -39,7 +39,7 @@ const CreateProjectForm = ({ user_id, onProjectCreated }) => {
           category: 'Військова допомога' 
         });
         
-        // Оновлюємо список проєктів на сторінці, якщо функція передана
+      
         if (onProjectCreated) onProjectCreated(); 
       }
     } catch (err) {
@@ -101,7 +101,13 @@ const CreateProjectForm = ({ user_id, onProjectCreated }) => {
             required 
           />
         </div>
-
+<input 
+    type="text" 
+    placeholder="Посилання на картинку (URL)" 
+    value={project.image_url || ''} 
+    onChange={(e) => setProject({...project, image_url: e.target.value})} 
+    className="form-control"
+/>
         <button type="submit" className="btn-modern-help" disabled={loading}>
           {loading ? "Публікація..." : "Опублікувати проєкт"}
         </button>
